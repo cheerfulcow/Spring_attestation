@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Главная страница</title>
+</head>
+<body>
+<h3>Первое приложение с использованием Spring Security</h3>
+<!--логаут по ссылке работать не будет с csrf токенами
+  <a href="/logout">Выход из личного кабинета</a>-->
+<!--упаковываем кнопку в форму для формирования POST-запроса на разлогинивание-->
+<form method="post" action="/logout">
+    <button type="submit" >Выйти из личного кабинета</button>
+</form>
+</body>
+</html>
