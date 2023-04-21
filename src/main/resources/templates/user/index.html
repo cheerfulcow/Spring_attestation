@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Главная страница</title>
+</head>
+<body>
+<!--логаут по ссылке работать не будет с csrf токенами
+  <a href="/logout">Выход из личного кабинета</a>-->
+<!--упаковываем кнопку в форму для формирования POST-запроса на разлогинивание-->
+<form method="post" action="/logout">
+    <button type="submit" >Выйти из личного кабинета</button>
+<h3>Главная страница</h3>
+<h3>Доступные товары: </h3>
+<!--Проходимся циклом по продуктам и для каждого выводим:-->
+<div th:each="product: ${products}">
+    <!--Изображение по ссылке /img/названиеФото, где заместо /img/ подставиться значение, указанное в классе Config
+    (там указано, что если встречается путь "/img/, то вместо него подставляем "file:///"+uploadPath+"/",
+    а после слэша будет название первой фотографии в листе фотографий данного товара-->
+    <img th:src="'/img/' + ${product.imageList[0].getFileName()}" width="300px">
+    <br>
+    <a th:href="@{/product/info/{id}(id=${product.getId()})}" th:text="${product.getTitle()}"></a>
+    <p th:text="'Цена: ' + ${product.getPrice()}"></p>
+    <hr>
+</div>
+
+</form>
+</body>
+</html>
