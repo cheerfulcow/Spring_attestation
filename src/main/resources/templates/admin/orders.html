@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Список всех заказов</title>
+</head>
+<body>
+<form method="POST" th:action="@{/logout}">
+    <button type="submit">Выйти из личного кабинета</button>
+</form>
+<br>
+<a href="/admin">Назад в личный кабинет</a>
+<hr>
+<br>
+
+<h3>Поиск заказов</h3>
+<!--th:action - указываем, каким URL-адресом будет обработана наша страница(на какой адрес
+её отправляем, т.е. этот адрес д.б. у соответствующего контролера
+В name указываем имя, по которому контроллер будет принимать введенные значения с поля-->
+<form th:method="POST" th:action="@{/admin/order/search}">
+    <label for="search">Поиск по номеру заказа</label>
+    <!--  Отправляем по ключу value полученное с формы значение на контроллер и обрабатываем его там-->
+    <input type="text" id="search" name="search" th:value="*{value_search}" width="200px" maxlength="4">
+    <input type="submit" value="Искать">
+    <br>
+</form>
+<hr>
+<h3>Результат поиска:</h3>
+<!--Тут мы принимаем {search_order}, который приходит к нам из метода AdminКонтроллера, который обрабатывает поисковый запрос-->
+<div th:each="order: ${search_order}">
+    <a th:href="@{/admin/order/{id}(id=${order.getId()})}" th:text="${order.getOnumber()}"></a>
+    <p th:text="${order.getPerson()}"></p>
+    <hr>
+</div>
+
+<hr>
+<br>
+<h3>Список всех заказов</h3>
+<br>
+<div th:each="order : ${orders}">
+    <a th:href="@{/admin/order/{id}(id=${order.getId()})}" th:text="'Номер заказа: ' + ${order.getOnumber()}"></a>
+    <p th:text="'Дата заказа: ' + ${#temporals.format(order.getDateTime(), 'dd-MMM-yyyy')}"></p>
+    <p th:text="'Состав заказа: ' + ${order.getProduct().getTitle()}"></p>
+    <p th:text="'Статус заказа: ' + ${order.getStatus()}"></p>
+    <hr>
+    <br>
+</div>
+</body>
+</html>

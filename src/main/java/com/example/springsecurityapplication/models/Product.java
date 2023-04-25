@@ -16,24 +16,24 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    //Если поле name не указывать, то столбец будет назван как само поле (title)
-    @Column(name = "Наименование", nullable = false, columnDefinition = "text", unique = true)
+    //Если поле name не указывать, то столбец будет назван как само поле (title).
+    @Column(name = "title", nullable = false, columnDefinition = "text", unique = true)
     @NotEmpty(message = "Наименование товара не может быть пустым")
     private String title;
 
-    @Column(name = "Описание товара", nullable = false, columnDefinition = "text")
+    @Column(name = "description", nullable = false, columnDefinition = "text")
     @NotEmpty(message = "Описание товара не может быть пустым")
     private String description;
 
-    @Column(name = "Цена", nullable = false)
+    @Column(name = "price", nullable = false)
     @Min(value = 1, message = "Цена товара не может быть отрицательной или нулевой")
     private float price;
 
-    @Column(name = "Склад товара",nullable = false)
+    @Column(name = "warehouse",nullable = false)
     @NotEmpty(message = "Наименование склада не может быть пустым")
     private String warehouse;
 
-    @Column (name = "Продавец", nullable = false)
+    @Column (name = "seller", nullable = false)
     @NotEmpty(message = "Информация о продавце не может быть пустой")
     private String seller;
 
@@ -50,6 +50,17 @@ public class Product {
     //Связываем с полем product класса Image
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "product")
     private List<Image> imageList = new ArrayList<>();
+
+    //Для работы с корзиной
+    //@JoinTable указывает, что для реализации связи М-М создаётся промежуточная таблица product_cart (это класс Cart)
+    //@JoinColumn указывает, какие колонки будут в промежуточной таблице. Первой указывается колонка, имеющая отношение к текущему классу("product_id")
+    //В самой таблице Product при этом новых колонок не добавляется
+    @ManyToMany()
+    @JoinTable(name="product_cart", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "person_id"))
+    private List<Person> personList;
+
+    @OneToMany(mappedBy = "product", fetch = FetchType.EAGER)
+    private List<Order> orderList;
 
     public Product(String title, String description, float price, String warehouse, String seller, Category category, LocalDateTime dateTime, List<Image> imageList) {
         this.title = title;
@@ -73,6 +84,14 @@ public class Product {
         imageList.add(image); //добавляем фото в лист
     }
 
+    public void replaceImageToProduct(int index, Image image,List<Image> productImageList){
+        //Указываем, для какого конкретно товара предназначена привязываемая фотография
+        // т.е. качестве продукта, к которому будет привязываться фотография будет текущий продукт
+        image.setProduct(this);
+        productImageList.add(index, image); //добавляем фото в лист
+        index++;
+        productImageList.remove(index);
+    }
 
     //Данный метод будет заполнять поле даты и времени при создании объекта класса
     //Сработает автоматически при создании объекта

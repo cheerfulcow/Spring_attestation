@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -57,6 +58,16 @@ public class Person {
     public void setRole(String role) {
         this.role = role;
     }
+
+    //Для работы с корзиной
+    //@JoinTable указывает, что для реализации связи М-М создаётся промежуточная таблица product_cart
+    //@JoinColumn указывает, какие колонки будут в промежуточной таблице. Первой указывается колонка, имеющая отношение к текущему классу("product_id")
+    @ManyToMany()
+    @JoinTable(name="product_cart", joinColumns = @JoinColumn(name = "person_id"), inverseJoinColumns = @JoinColumn(name = "product_id"))
+    private List<Product> productList;
+
+    @OneToMany (mappedBy = "person", fetch = FetchType.EAGER)
+    private List<Order> orderList;
 
     @Override
     public boolean equals(Object o) {

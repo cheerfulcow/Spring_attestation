@@ -2,27 +2,80 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Главная страница</title>
-</head>
-<body>
-<!--логаут по ссылке работать не будет с csrf токенами
-  <a href="/logout">Выход из личного кабинета</a>-->
-<!--упаковываем кнопку в форму для формирования POST-запроса на разлогинивание-->
-<form method="post" action="/logout">
-    <button type="submit" >Выйти из личного кабинета</button>
-<h3>Главная страница</h3>
-<h3>Доступные товары: </h3>
-<!--Проходимся циклом по продуктам и для каждого выводим:-->
-<div th:each="product: ${products}">
-    <!--Изображение по ссылке /img/названиеФото, где заместо /img/ подставиться значение, указанное в классе Config
-    (там указано, что если встречается путь "/img/, то вместо него подставляем "file:///"+uploadPath+"/",
-    а после слэша будет название первой фотографии в листе фотографий данного товара-->
-    <img th:src="'/img/' + ${product.imageList[0].getFileName()}" width="300px">
+    <h2>Личный кабинет</h2>
+    <form method="POST" th:action="@{/logout}">
+        <button type="submit">Выйти из личного кабинета</button>
+    </form>
     <br>
-    <a th:href="@{/product/info/{id}(id=${product.getId()})}" th:text="${product.getTitle()}"></a>
-    <p th:text="'Цена: ' + ${product.getPrice()}"></p>
+    <form method="get" th:action="@{/cart}">
+        <button type="submit">Корзина</button>
+    </form>
+    <br>
+    <form method="get" th:action="@{/orders}">
+        <button type="submit">Ваши заказы</button>
+    </form>
+    <br>
+    <h3>Сортировка, поиск, фильтрация</h3>
+    <!--th:action - указываем, каким URL-адресом будет обработана наша страница(на какой адрес
+    её отправляем, т.е. этот адрес д.б. у соответствующего контролера
+    В name указываем имя, по которому контроллер будет принимать введенные значения с поля-->
+    <form th:method="POST" th:action="@{/person account/product/search}">
+        <fieldset>
+            <legend>Выберите параметры для сортировки, поиска, фильтрации</legend>
+            <label for="search">Поиск по наименованию</label>
+            <input type="text" id="search" name="search" th:value="*{value_search}">
+            <br>
+            <p>Цена, Р</p>
+            <label for="ot">От</label>
+            <input type="text" name="ot" id="ot" th:value="*{value_price_ot}">
+            <label for="do">До</label>
+            <input type="text" name="do" id="do" th:value="*{value_price_do}">
+            <br>
+            <br>
+            <div>
+                <!--  Отправляем по ключу value полученное с формы значение на контроллер и обрабатываем его там-->
+                <input type="radio" id="ascending_price" name="price" value="sorted_by_ascending_price">
+                <label for="ascending_price">Отсортировать по возрастанию цены</label>
+                <input type="radio" id="descending_price" name="price" value="sorted_by_descending_price">
+                <label for="descending_price">Отсортировать по убыванию цены</label>
+                <p>Категория товара:</p>
+                <input type="radio" id="furniture" name="contract" value="furniture">
+                <label for="furniture">Мебель</label>
+                <input type="radio" id="appliances" name="contract" value="appliances">
+                <label for="appliances">Бытовая техника</label>
+                <input type="radio" id="clothes" name="contract" value="clothes">
+                <label for="clothes">Одежда</label>
+                <br>
+                <br>
+                <input type="submit" value="Найти">
+            </div>
+        </fieldset>
+    </form>
     <hr>
-</div>
+    <h3>Результат поиска, сортировки, фильтрации</h3>
+    <!--Тут мы принимаем {search_product}, который приходит к нам из метода productSearch продуктКонтроллера, который обрабатывает поисковый запрос-->
+    <div th:each="product: ${search_product}">
+        <!--Изображение по ссылке /img/названиеФото, где заместо /img/ подставиться значение, указанное в классе Config
+        (там указано, что если встречается путь "/img/, то вместо него подставляем "file:///"+uploadPath+"/",
+        а после слэша будет название первой фотографии в листе фотографий данного товара-->
+        <img th:src="'/img/' + ${product.imageList[0].getFileName()}" width="300px">
+        <br>
+        <a th:href="@{/product/info/{id}(id=${product.getId()})}" th:text="${product.getTitle()}"></a>
+        <p th:text="'Цена: ' + ${product.getPrice()}"></p>
+    <!--Добавляем ссылку на добавление товара в корзину-->
+        <a th:href="@{/cart/add/{id}(id=${product.getId()})}">Добавить товар в корзину</a>
+        <hr>
+    </div>
+
+    <h3>Доступные товары: </h3>
+    <div th:each="product : ${products}">
+        <img th:src="'/img/' + ${product.imageList[0].getFileName()}" width="300px">
+        <br>
+        <a th:href="@{/product/info/{id}(id=${product.getId()})}" th:text="${product.getTitle()}"></a>
+        <p th:text="'Цена: ' + ${product.getPrice()}"></p>
+        <a th:href="@{/cart/add/{id}(id=${product.getId()})}">Добавить товар в корзину</a>
+        <hr>
+    </div>
 
 </form>
 </body>
