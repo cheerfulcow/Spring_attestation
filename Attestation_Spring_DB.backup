@@ -1,0 +1,628 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 15.2
+-- Dumped by pg_dump version 15.2
+
+-- Started on 2023-04-25 20:38:56
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- TOC entry 215 (class 1259 OID 16529)
+-- Name: category; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.category (
+    id integer NOT NULL,
+    title character varying(255)
+);
+
+
+ALTER TABLE public.category OWNER TO postgres;
+
+--
+-- TOC entry 214 (class 1259 OID 16528)
+-- Name: category_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.category_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.category_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3384 (class 0 OID 0)
+-- Dependencies: 214
+-- Name: category_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.category_id_seq OWNED BY public.category.id;
+
+
+--
+-- TOC entry 217 (class 1259 OID 16536)
+-- Name: image; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.image (
+    id integer NOT NULL,
+    file_name character varying(255),
+    product_id integer NOT NULL
+);
+
+
+ALTER TABLE public.image OWNER TO postgres;
+
+--
+-- TOC entry 216 (class 1259 OID 16535)
+-- Name: image_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.image_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.image_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3385 (class 0 OID 0)
+-- Dependencies: 216
+-- Name: image_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.image_id_seq OWNED BY public.image.id;
+
+
+--
+-- TOC entry 225 (class 1259 OID 16591)
+-- Name: orders; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.orders (
+    id integer NOT NULL,
+    count integer NOT NULL,
+    date_time timestamp(6) without time zone,
+    onumber character varying(255),
+    price real NOT NULL,
+    status smallint,
+    person_id integer NOT NULL,
+    product_id integer NOT NULL
+);
+
+
+ALTER TABLE public.orders OWNER TO postgres;
+
+--
+-- TOC entry 224 (class 1259 OID 16590)
+-- Name: orders_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.orders_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.orders_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3386 (class 0 OID 0)
+-- Dependencies: 224
+-- Name: orders_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.orders_id_seq OWNED BY public.orders.id;
+
+
+--
+-- TOC entry 219 (class 1259 OID 16543)
+-- Name: person; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.person (
+    id integer NOT NULL,
+    login character varying(100),
+    password character varying(255),
+    role character varying(255)
+);
+
+
+ALTER TABLE public.person OWNER TO postgres;
+
+--
+-- TOC entry 218 (class 1259 OID 16542)
+-- Name: person_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.person_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.person_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3387 (class 0 OID 0)
+-- Dependencies: 218
+-- Name: person_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.person_id_seq OWNED BY public.person.id;
+
+
+--
+-- TOC entry 221 (class 1259 OID 16552)
+-- Name: product; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.product (
+    id integer NOT NULL,
+    date_time timestamp(6) without time zone,
+    description text NOT NULL,
+    price real NOT NULL,
+    seller character varying(255) NOT NULL,
+    title text NOT NULL,
+    warehouse character varying(255) NOT NULL,
+    category_id integer NOT NULL,
+    CONSTRAINT "product_цена_check" CHECK ((price >= (1)::double precision))
+);
+
+
+ALTER TABLE public.product OWNER TO postgres;
+
+--
+-- TOC entry 223 (class 1259 OID 16574)
+-- Name: product_cart; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.product_cart (
+    id integer NOT NULL,
+    person_id integer,
+    product_id integer
+);
+
+
+ALTER TABLE public.product_cart OWNER TO postgres;
+
+--
+-- TOC entry 222 (class 1259 OID 16573)
+-- Name: product_cart_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.product_cart_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.product_cart_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3388 (class 0 OID 0)
+-- Dependencies: 222
+-- Name: product_cart_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.product_cart_id_seq OWNED BY public.product_cart.id;
+
+
+--
+-- TOC entry 220 (class 1259 OID 16551)
+-- Name: product_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.product_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.product_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3389 (class 0 OID 0)
+-- Dependencies: 220
+-- Name: product_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.product_id_seq OWNED BY public.product.id;
+
+
+--
+-- TOC entry 3198 (class 2604 OID 16532)
+-- Name: category id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.category ALTER COLUMN id SET DEFAULT nextval('public.category_id_seq'::regclass);
+
+
+--
+-- TOC entry 3199 (class 2604 OID 16539)
+-- Name: image id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.image ALTER COLUMN id SET DEFAULT nextval('public.image_id_seq'::regclass);
+
+
+--
+-- TOC entry 3203 (class 2604 OID 16594)
+-- Name: orders id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.orders ALTER COLUMN id SET DEFAULT nextval('public.orders_id_seq'::regclass);
+
+
+--
+-- TOC entry 3200 (class 2604 OID 16546)
+-- Name: person id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.person ALTER COLUMN id SET DEFAULT nextval('public.person_id_seq'::regclass);
+
+
+--
+-- TOC entry 3201 (class 2604 OID 16555)
+-- Name: product id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.product ALTER COLUMN id SET DEFAULT nextval('public.product_id_seq'::regclass);
+
+
+--
+-- TOC entry 3202 (class 2604 OID 16577)
+-- Name: product_cart id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.product_cart ALTER COLUMN id SET DEFAULT nextval('public.product_cart_id_seq'::regclass);
+
+
+--
+-- TOC entry 3368 (class 0 OID 16529)
+-- Dependencies: 215
+-- Data for Name: category; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.category (id, title) FROM stdin;
+1	Мебель
+2	Одежда
+3	Бытовая техника
+\.
+
+
+--
+-- TOC entry 3370 (class 0 OID 16536)
+-- Dependencies: 217
+-- Data for Name: image; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.image (id, file_name, product_id) FROM stdin;
+6	4cb0c1eb-5473-4025-a89c-b127e5c3d924.1.jpg	2
+7	80f2ee5d-262c-43c7-809e-133f0a1c13ae.2.jpg	2
+8	5fd844b3-86a7-49cd-ad44-b7a77a32c049.3.jpg	2
+9	c7467a97-057f-4ede-af3c-b8aadc3491c2.4.jpg	2
+10	efcd1b76-cce8-4320-b482-0c78e8423f97.5.jpg	2
+16	77f969dd-ba1c-4c9e-9c27-a1818ae05028.	4
+17	17d55eb8-3ab2-4099-98ad-ae9e42a9cbe0.	4
+18	696af6a9-2bc2-457f-886c-183bf6eb7938.	4
+19	1f4d968a-bc2e-4140-9959-7316e75ad89a.	4
+20	f69f5f35-10c5-4efa-b766-031b804f7b48.	4
+21	0d44930a-242f-49b4-85d1-4d815aa39f12.1.jpg	5
+22	8bec7a0b-cf9d-4393-bf47-24966d21091f.2.jpg	5
+23	25ca1169-74b8-4788-ac20-0188aac3f785.3.jpg	5
+24	5b2606a0-5666-4e80-91b4-e2589b980989.4.jpg	5
+25	fe467796-8e50-4b66-89c0-f7507121aa51.5.jpg	5
+26	82d5a479-8615-4e52-a0af-3496cec17288.1.jpeg	6
+27	f339f09a-e4be-4edc-a5af-d82548254fb6.2.jpg	6
+28	ecbb790d-e255-4c64-b34a-521ab7e6d336.3.jpg	6
+29	7d1feb4f-8232-4cf7-be5a-26a9b119b5d0.4.jpg	6
+30	c1970a5f-5c72-462d-9780-b333c100ada2.5.jpg	6
+31	80fac7c2-c2c2-41a4-9d15-b07a63fcad07.1.jpg	7
+32	80f46cec-5fee-4053-ab82-86c166ffd7a9.2.jpg	7
+33	0cfc70c3-b58f-4e2f-ae64-34c5843da085.3.jpg	7
+34	2e60db7d-2a72-447b-ba03-aa690db86df7.4.jpg	7
+35	c7217537-9c05-4a16-b56d-96279599772c.5.jpg	7
+36	95268466-a98f-4a92-ba6b-8c4a297a2925.1 .webp	8
+37	71a40f82-53d8-4999-ae9b-a65c3fa59e3a.2.jpg	8
+38	ed99ef65-ed45-48e2-b333-df26eb8b23f2.3.jpg	8
+39	a33cf5fe-429a-4c0e-ae62-dc1d39d2de88.4.jpg	8
+40	991760a2-6096-44ae-a502-43d39e001ca8.5.jpg	8
+41	d98b9907-39a8-4cf8-95c0-4298c2bd3607.1 (1).jpg	9
+42	8abd00b7-9c1f-46d0-80ae-b4b63475ba69.2.jpg	9
+43	75e0f17c-8a2e-4518-9107-e98bed23cbdf.3.jpg	9
+44	58c34d5f-8bfb-4ec7-bb08-89e893dcdea8.4.jpg	9
+45	0d98b316-f44e-442e-a091-c556cbca2225.5.jpg	9
+46	03a60d58-8ed6-470c-8e1d-d5148642b1ba.1 .jpeg	10
+47	56c60e50-fc42-45d5-885c-496c1e765437.2.jpg	10
+48	750cc727-f746-44d8-8ae5-fa19b1991bc4.3.jpg	10
+49	863c9b48-544e-4ef4-ba06-efda5fe60477.4.jpg	10
+50	02a7ff56-9331-47f4-ba42-630ac9897e49.5.jpg	10
+51	473fa126-4a25-4f3a-9ead-715bef3a4037.1.jpg	11
+52	6f0702a6-b2e4-4b1b-a378-85555b7d4466.2.jpeg	11
+53	7ee07400-a362-4f69-8041-0d372d3ab74e.3.jpg	11
+54	4cf8436c-0e21-4641-8109-de315c2e3467.4.jpeg	11
+55	297951a7-18f8-4f5e-982b-6e089e4e4c88.5.jpg	11
+56	f3c2bac9-a39f-46e2-8778-060bb938a0fa.1.jpg	12
+57	9d05cfec-3f41-4f4e-8e4c-ecf38ab4c881.2.jpg	12
+58	9787bae1-2851-407a-b1d3-736e709b4852.3.jpg	12
+59	5354c0b2-a49a-4eaa-8151-da3a62aeb90a.4.jpg	12
+60	b86131ff-b5e2-4e0f-b0de-4bcb25a27341.5.jpg	12
+170	93ec1950-9e66-49d9-ae54-5a933277cf7d.5.jpg	22
+\.
+
+
+--
+-- TOC entry 3378 (class 0 OID 16591)
+-- Dependencies: 225
+-- Data for Name: orders; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.orders (id, count, date_time, onumber, price, status, person_id, product_id) FROM stdin;
+6	1	2023-04-24 19:45:11.151758	f701ef28-8d05-465c-8ccc-1d2cbef4cb1a	3960	2	2	2
+3	1	2023-04-23 22:30:18.50964	10a5ad4c-c57f-488b-b2ab-3a621f1b3410	3000	2	2	6
+2	1	2023-04-23 22:28:40.646843	b77b0269-e1d1-4cb4-a1f1-734e88fb39e1	11249	0	2	9
+5	1	2023-04-23 22:30:47.203367	e0ef1ba9-acad-455c-b0ee-8846df04c671	10999	0	2	10
+4	1	2023-04-23 22:30:47.189401	e0ef1ba9-acad-455c-b0ee-8846df04c671	338	1	2	8
+1	1	2023-04-23 22:28:40.561117	b77b0269-e1d1-4cb4-a1f1-734e88fb39e1	2520	0	2	5
+\.
+
+
+--
+-- TOC entry 3372 (class 0 OID 16543)
+-- Dependencies: 219
+-- Data for Name: person; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.person (id, login, password, role) FROM stdin;
+1	admin	$2a$10$CfSeD7VATdgJwHp.r9PWjuoNyQ8zwGLYOs0snH1aiT3f7fWy7jkiK	ROLE_ADMIN
+3	user2	$2a$10$AYOlZfG02c/3vc7gD4DwZudcU1iyB2DwX32fzCye7tiez9YNMVUfO	ROLE_USER
+2	user1	$2a$10$y5O.6aPe3KArrjKY9d2vVO4OhzSacVJtLG25t3X1p5tV6eEMqYa/y	ROLE_USER
+\.
+
+
+--
+-- TOC entry 3374 (class 0 OID 16552)
+-- Dependencies: 221
+-- Data for Name: product; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.product (id, date_time, description, price, seller, title, warehouse, category_id) FROM stdin;
+2	2023-04-21 20:00:56.37025	Описание: Размеры (ШхГхВ): 75,2х43х75 см. Комод неотъемлемая часть мебели квартиры или дома. Комод деревянный Ксения станет надежным помощником в хранении вещей. Комод для хранения представлен в нескольких цветах: белый, крафт белый, серый, дуб сонома и бук, что позволит вписать в интерьер комнаты и сочетать с другой мебелью в доме. Комод для вещей идет в двух вариантах: с ручками и без них. Во втором варианте в комоде убраны ручки и удлинен фасад, за который и происходит открывание. Универсальность тумбы позволяет использовать ее, как детскую мебель в комнате вашего ребенка, в четырех больших ящиках поместятся игрушки и вещи. Поставьте его вместе с письменным столом Альянс арт. 100243145 в детской и он станет помощником в хранении учебников, тетрадей и канцелярии. В спальне он выступит как тумба для ТВ. А поставив в прихожей, комод Ксения будет сочетаться с обувницей Грация арт. 114272890 и настенной вешалкой Глория арт. 73452816. Мебельная фабрика «Стендмебель» использует только высококачественные материалы и фурнитуру, мы заботимся о наших покупателях и хотим, чтобы наша мебель прослужила Вам как можно дольше. Мы делаем все возможное, чтобы наша продукция доезжала даже в самые дальние уголки нашей страны целой и радовало Вас, для этого мы упаковываем нашу продукцию в картон, а по периметру укрепляем упаковку пенопластом. Для сборки Вам понадобится отвертка или шуроповерт, ключ шестигранник идет в комплекте. Гарантия: 12 месяцев	3960	Стендмебель - фабрика мебели	Стендмебель Комод с ящиками Ксения СТМ для вещей	Склад: Коледино	1
+4	\N	п4п4	8	п43п3	Абфрвал	4п3	2
+5	2023-04-21 21:31:02.886885	Описание: Размеры (ШхГхВ): 60х25,6х75 смНаша обувница Джулия станет прекрасным решением для удобного хранения обуви в прихожей, создав комфорт и чистоту в Вашем доме. Основное преимущество данной модели - её компактные размеры, позволяющие сэкономить несколько квадратных метров пола прихожей даже небольшой квартиры, обувная полка подойдет для хранения мужской, женской и детской обуви. Благодаря классическому дизайну, универсальности и актуальным цветовым решениям этажерка для обуви отлично дополнит Ваш комплект мебели любого стиля. Обувница в прихожую или как ее еще называют, галошница оснащена изолированной полочкой под аксессуары, которая станет незаменимой для домашних мелочей, ключей, перчаток, шапок, шарфов или предметов по уходу за обувью. В закрытом состоянии используйте её, чтобы поставить сумочку или пакет, положить зонт. Обувница белая, как и другие цвета имеет три наклонные полки для обуви в прихожую общей вместимостью до 9 пар обуви. Обувница для обуви сделана из сертифицированных и высококачественных ЛДСП, поэтому она прослужит Вам не один год. Собрать полки для обуви легко в домашних условиях. К набору прилагается подробная инструкция по сборке. Габаритные размеры обувницы (ШхВхГ) 60х25,6х75 см. Так же предлагаем другие наши товары бренда Стендмебель: Вешалка Глория артикул 73452816, Обувница Дина артикул 73474145, Вешалка Грация-2 артикул 112396129.	2520	Стендмебель - фабрика мебели	Стендмебель Обувница Джулия СТМ, тумба для обуви	Коледино	1
+6	2023-04-21 21:32:22.403262	Описание: Размеры (ШхГхВ): 100х38,6х74,6 см Компьютерный стол Софи привлекает своей функциональностью, строгим дизайном и высоким уровнем прочности. Наш стол выполнен в трех цветах поэтому для него найдется место в любой комнате Вашего дома. Может использоваться как детский, компьютерный столик для учебы и отдыха или в кабинет и использовать его как рабочий стол. Вы можете расставить на него косметику и использовать как туалетный столик в спальню. В открытые полочки можно положить не только любимые книги и игрушки, но и различную мелочь для дома. Так же стол отлично впишется в любой офис и станет удобным рабочим местом для сотрудника. Модели обладают стандартной высотой, которая обеспечит вам и вашему ребенку комфортную посадку. Для стола используются сертифицированные, высококачественные ЛДСП, поэтому наша мебель прослужит вам не один год. К набору прилагается подробная инструкция по сборке.	3000	Стендмебель - фабрика мебели	Стендмебель Стол письменный Софи СТМ, компьютерный	Коледино	1
+7	2023-04-21 21:33:41.825451	Описание: Джинсы молодежные на лето и осень - незаменимая вещь современного модного базового мужского гардероба. Удобные и функциональные - эти штаны брюки используются в качестве рабочей одежды, для дома, для спорта, для бега. Разнообразие моделей джинсовых брюк широкое: трубы, бананы, бойфренды, джоггеры, slim, бриджи, мотоджинсы. Особой популярностью пользуются прямые и зауженные к низу классические джинсы со средней и высокой посадкой. В коллекции бренда EREMES представлены синие голубые джинсы для мужчин высокого роста ( до 190 см), отлично сочетаются с рубашкой, толстовкой, худи, пиджаком и водолазкой. Модель штанов классического прямого кроя, застежка молния и шарнирная пуговица, накладные карманы сзади, штаны не зауженные, без флиса. Идеальная посадка обеспечена за счет точных лекал с фабрик Турции. Штаны подойдут обладателям больших размеров и высоким мальчикам подросткам. В них удобно водить автомобиль и мотоцикл. Мужские брюки комфортно носить в летний период. Подарок любимому другу папе. Турецкие джинсы мужские прямые широкие штаны классика брюки для невысоких мужская одежда для мальчиков рваные американки брюки с карманами без утепления скинни осень зима casual слоучи момы из плотного денима skinny с потертостями спортивки оверсайз стрейч светлые узкие молодежные слим большие зимние потертые по бокам больших размеров летние брюки	1450	EREMES	Eremes Джинсы мужские прямые классические	Коледино	2
+8	2023-04-21 21:34:55.404787	Описание: Футболка мужская хлопок спортивная однотонная базовая модная свободная пляжная с коротким рукавом. Стильная хлопковая футболка классического кроя - это вещь унисекс, которая подойдет и мужчинам, и женщинам. СОСТАВ: ХЛОПОК 100% ПЛОТНОСТЬ 180 гр/мк в. Молодежная женская и мужская футболка выполнена из плотной хлопковой ткани и имеет круглый вырез горловины. Удлиненная футболка подходит для отдыха, туризма и занятий спортом: фитнеса, йоги, бега и тренировок в зале. В ней можно отправиться на прогулку в город. Базовая футболка вписывается в школьную форму и офисный стиль. Ее можно носить дома или надеть в школу и на работу в офис под пиджак. Трикотажная футболка оптимальна для носки летом. Она является базовой вещью и будет прекрасно сочетаться со всеми вещами в вашем гардеробе, в том числе в стиле оверсайз. Красивая футболка подойдет парням и девушкам любого роста - высоким и невысоким. Ее могут носить взрослые и подростки. В ассортименте большой выбор ярких цветов. Вы можете подарить ее на день рождения любимому мужу, маме, брату или папе. У нас есть акции и распродажи, вы можете купить наши товары в подарок со скидкой!	338	UZcotton	UZcotton Футболка мужская хлопок спортивная однотонная базовая	Коледино	2
+9	2023-04-21 21:35:58.475014	Описание: Мужская футбольная куртка для тренировок в прохладную погоду. Утепленная модель дополнена стегаными вставками на подкладке и рукавах. Застежка на молнию и глубокий прилегающий капюшон. Современный приталенный крой.	11249	ВАЙЛДБЕРРИЗ	adidas Куртка	Коледино	2
+10	2023-04-21 21:37:04.398985	Описание: **5 в 1: Планетарный миксер с 3-мя насадками, Блендер, Мясорубка. Технология SmartMIX - прибор автоматически подбирает оптимальную мощность работы для каждого вида и количества ингредиентов. Технология PROtect+ защита двигателя от перегрева.** Надёжная конструкция со стальными шестернями. Планетарное вращение насадок. Чаша из нержавеющей стали. Объем чаши 5 л. 6 скоростных режимов. Плавная регулировка скорости. Импульсивный режим. Венчик для взбивания. Насадка для смешивания. Крюк для замешивания теста. Крышка чаши для добавления ингредиентов. Мясорубка: 2 диска из нержавеющей стали (5 и 7 мм). Кувшин блендера из высокопрочного стекла объемом 1,5 л.Низкий уровень шума. Система безопасного включения. Защита двигателя от перегрева. Отсек для намотки сетевого шнура. Прорезиненные ножки. Мощность: 1100 Вт.	10999	ВАЙЛДБЕРРИЗ	Polaris Планетарный миксер / Кухонная машина PKM 1104, (POLARIS)	Коледино	3
+11	2023-04-21 21:38:28.457105	Описание: Беспроводной ручной портативный пылесос отлично подойдет для уборки различных помещений. В комплекте присутствуют фильтр, вертикальный стакан или контейнер для воды, есть насадки, но набор идет без мешка. Присутствует 3 бака для воды. В одном вода очищается, в другом - хранится в чистом виде, а в третий - поступает грязная. Также есть функция самоочистки пылесоса. И сухая, и влажная уборка с ним станут намного проще и быстрее. Щетка имеет мощный аккумулятор и работает на батарейка. Компактный мобильный пылесос может использоваться как швабра. Моющий прибор хорошо подойдет для уборки шерсти с дивана, чистки ковров, для пыли и грязи, или просто для мытья полов. Мобильный аккумуляторный пылесос очень хороший помощник для дома.	17995	Официальный магазин Polaris	Redkey Вертикальный пылесос , моющий пылесос	Коледино	3
+12	2023-04-21 21:39:52.630886	Описание: Новая стиральная машина ATLANT серии INTENSE EXPERT имеет уникальный дизайн, который прекрасно дополнит любой интерьер своим внешним видом. С помощью новых сенсорных технологий достаточно легкого касания для выбора функций и программ. Светодиодные индикаторы и сегментный дисплей машины размещены на панели управления под небольшим углом, что облегчает визуальное восприятие отображаемой информации о работе машины. Благодаря интеллектуальным программам она не только интуитивно понятна в управлении, но и обеспечивает превосходные результаты стирки при низком потреблении воды и электроэнергии. Кроме того, действует увеличенная гарантия 5 лет на двигатель.	33615	ВАЙЛДБЕРРИЗ	ATLANT Стиральная машина CMA-80 C 1214-01	Склад: Коледино	3
+22	\N	новый товар	6000	продавец	Новый товар	Коледино	1
+\.
+
+
+--
+-- TOC entry 3376 (class 0 OID 16574)
+-- Dependencies: 223
+-- Data for Name: product_cart; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.product_cart (id, person_id, product_id) FROM stdin;
+\.
+
+
+--
+-- TOC entry 3390 (class 0 OID 0)
+-- Dependencies: 214
+-- Name: category_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.category_id_seq', 3, true);
+
+
+--
+-- TOC entry 3391 (class 0 OID 0)
+-- Dependencies: 216
+-- Name: image_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.image_id_seq', 170, true);
+
+
+--
+-- TOC entry 3392 (class 0 OID 0)
+-- Dependencies: 224
+-- Name: orders_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.orders_id_seq', 6, true);
+
+
+--
+-- TOC entry 3393 (class 0 OID 0)
+-- Dependencies: 218
+-- Name: person_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.person_id_seq', 3, true);
+
+
+--
+-- TOC entry 3394 (class 0 OID 0)
+-- Dependencies: 222
+-- Name: product_cart_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.product_cart_id_seq', 8, true);
+
+
+--
+-- TOC entry 3395 (class 0 OID 0)
+-- Dependencies: 220
+-- Name: product_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.product_id_seq', 23, true);
+
+
+--
+-- TOC entry 3206 (class 2606 OID 16534)
+-- Name: category category_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.category
+    ADD CONSTRAINT category_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3208 (class 2606 OID 16541)
+-- Name: image image_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.image
+    ADD CONSTRAINT image_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3218 (class 2606 OID 16596)
+-- Name: orders orders_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.orders
+    ADD CONSTRAINT orders_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3210 (class 2606 OID 16550)
+-- Name: person person_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.person
+    ADD CONSTRAINT person_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3216 (class 2606 OID 16579)
+-- Name: product_cart product_cart_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.product_cart
+    ADD CONSTRAINT product_cart_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3212 (class 2606 OID 16560)
+-- Name: product product_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.product
+    ADD CONSTRAINT product_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3214 (class 2606 OID 16562)
+-- Name: product uk_7aqa3gchrwx3rdv9ydnpgdgsr; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.product
+    ADD CONSTRAINT uk_7aqa3gchrwx3rdv9ydnpgdgsr UNIQUE (title);
+
+
+--
+-- TOC entry 3223 (class 2606 OID 16597)
+-- Name: orders fk1b0m4muwx1t377w9if3w6wwqn; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.orders
+    ADD CONSTRAINT fk1b0m4muwx1t377w9if3w6wwqn FOREIGN KEY (person_id) REFERENCES public.person(id);
+
+
+--
+-- TOC entry 3220 (class 2606 OID 16568)
+-- Name: product fk1mtsbur82frn64de7balymq9s; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.product
+    ADD CONSTRAINT fk1mtsbur82frn64de7balymq9s FOREIGN KEY (category_id) REFERENCES public.category(id);
+
+
+--
+-- TOC entry 3224 (class 2606 OID 16602)
+-- Name: orders fk787ibr3guwp6xobrpbofnv7le; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.orders
+    ADD CONSTRAINT fk787ibr3guwp6xobrpbofnv7le FOREIGN KEY (product_id) REFERENCES public.product(id);
+
+
+--
+-- TOC entry 3219 (class 2606 OID 16563)
+-- Name: image fkgpextbyee3uk9u6o2381m7ft1; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.image
+    ADD CONSTRAINT fkgpextbyee3uk9u6o2381m7ft1 FOREIGN KEY (product_id) REFERENCES public.product(id);
+
+
+--
+-- TOC entry 3221 (class 2606 OID 16585)
+-- Name: product_cart fkhpnrxdy3jhujameyod08ilvvw; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.product_cart
+    ADD CONSTRAINT fkhpnrxdy3jhujameyod08ilvvw FOREIGN KEY (product_id) REFERENCES public.product(id);
+
+
+--
+-- TOC entry 3222 (class 2606 OID 16580)
+-- Name: product_cart fksgnkc1ko2i1o9yr2p63ysq3rn; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.product_cart
+    ADD CONSTRAINT fksgnkc1ko2i1o9yr2p63ysq3rn FOREIGN KEY (person_id) REFERENCES public.person(id);
+
+
+-- Completed on 2023-04-25 20:38:56
+
+--
+-- PostgreSQL database dump complete
+--
+
